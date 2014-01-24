@@ -258,7 +258,16 @@ class LaravelLocalization
 			}
 		}
 
+		$root_url = parse_url(url());
 		$parsed_url = parse_url($url);
+		//Prepare root directory path to be appended before locale
+		if (empty($root_url['path']))
+		{
+			$root_url['path'] ='';		
+		}else{
+			$parsed_url['path'] = str_replace($root_url['path'], '', $parsed_url['path']);
+		}
+		
 		if (empty($parsed_url['path']))
 		{
 			$path = $parsed_url['path'] = "";
@@ -289,6 +298,7 @@ class LaravelLocalization
 			$parsed_url['path'] = rtrim($parsed_url['path'], '/');
 		}
 
+		$parsed_url['path'] = $root_url['path'].$parsed_url['path'];
 		return $this->unparse_url($parsed_url);
 	}
 
